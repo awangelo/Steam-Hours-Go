@@ -7,8 +7,6 @@ import (
 )
 
 func Login(user, pass string) *steam.Client {
-	log.Println("Login")
-
 	client := steam.NewClient()
 	detais := steam.LogOnDetails{Username: user, Password: pass}
 	client.Auth.LogOn(&detais)
@@ -22,12 +20,15 @@ func Login(user, pass string) *steam.Client {
 			return client
 		case *steam.LogOnFailedEvent:
 			log.Fatalf("Failed to log in: %v", e.Result)
+		default:
+			log.Printf("Event: %v", e)
 		}
 	}
 
 	return nil
 }
 
+// clientListen logs all events from the new client.
 func clientListen(client *steam.Client) {
 	for e := range client.Events() {
 		log.Printf("Event: %v", e)

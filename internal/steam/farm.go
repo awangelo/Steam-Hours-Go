@@ -1,5 +1,11 @@
 package steam
 
-func StartFarm() {
+import (
+	"log"
 
+	"github.com/Philipp15b/go-steam/v3"
+)
+
+func StartFarm(client *steam.Client, appId string) {
+	log.Printf("Starting farming for AppID: %s", appId)
 }
