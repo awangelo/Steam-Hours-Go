@@ -8,4 +8,7 @@ import (
 
 func StartFarm(client *steam.Client, appId string) {
 	log.Printf("Starting farming for AppID: %s", appId)
+
+	// steam.GameCoordinator
+	// ver as interfaces dessa struct
 }
