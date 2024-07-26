@@ -15,6 +15,9 @@ import (
 // 	// some error on Steam's side, we'll get an EOF later
 
 // Broken method prob. ↑
+
+// Connect failed: dial tcp 146.66.155.8:27017: connect: connection timed out
+// example bot ↑
 func StartFarm(client *steam.Client, appId string) {
 	log.Printf("Starting farming for AppID: %s", appId)
 
