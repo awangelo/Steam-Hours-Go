@@ -6,12 +6,14 @@ import (
 	"github.com/Philipp15b/go-steam/v3"
 )
 
-func Login(user, pass string) *steam.Client {
+func Login(user, pass, authCode string) *steam.Client {
 	client := steam.NewClient()
-	detais := steam.LogOnDetails{Username: user, Password: pass}
+	detais := steam.LogOnDetails{
+		Username:      user,
+		Password:      pass,
+		TwoFactorCode: authCode,
+	}
 	client.Auth.LogOn(&detais)
-
-	go clientListen(client)
 
 	for event := range client.Events() {
 		switch e := event.(type) {
@@ -20,17 +22,7 @@ func Login(user, pass string) *steam.Client {
 			return client
 		case *steam.LogOnFailedEvent:
 			log.Fatalf("Failed to log in: %v", e.Result)
-		default:
-			log.Printf("Event: %v", e)
 		}
 	}
-
 	return nil
-}
-
-// clientListen logs all events from the new client.
-func clientListen(client *steam.Client) {
-	for e := range client.Events() {
-		log.Printf("Event: %v", e)
-	}
 }

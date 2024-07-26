@@ -14,8 +14,9 @@ import (
 
 func main() {
 	var (
-		user string
-		pass string
+		user     string
+		pass     string
+		authCode string
 	)
 
 	flag.Parse()
@@ -40,10 +41,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	fmt.Print("Two-factor code (if enabled): ")
+	fmt.Scanln(&authCode)
+
 	clearTerm()
 	logger.Init()
 
-	client := steam.Login(user, pass)
+	client := steam.Login(user, pass, authCode)
 	steam.StartFarm(client, appId)
 	// Chamar a func em auth (pass, user e talvez auth code) que vai
 	// retornar um *Client que sera usado em StartHours(mudar depois?).
