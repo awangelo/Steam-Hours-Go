@@ -4,24 +4,33 @@ import (
 	"log"
 
 	"github.com/Philipp15b/go-steam/v3"
+	"github.com/Philipp15b/go-steam/v3/protocol/steamlang"
 )
 
 func Login(user, pass, authCode string) *steam.Client {
-	client := steam.NewClient()
 	detais := steam.LogOnDetails{
 		Username:      user,
 		Password:      pass,
 		TwoFactorCode: authCode,
 	}
-	client.Auth.LogOn(&detais)
+	client := steam.NewClient()
+	//client.Auth.LogOn(&detais)
 
+	client.Connect()
 	for event := range client.Events() {
 		switch e := event.(type) {
-		case *steam.LoggedOnEvent:
-			log.Println("Logged in!")
+		case *steam.ConnectedEvent:
+			log.Println("ConnectedEvent triggered")
+			client.Auth.LogOn(&detais)
+			client.Social.SetPersonaState(steamlang.EPersonaState_Online)
 			return client
-		case *steam.LogOnFailedEvent:
-			log.Fatalf("Failed to log in: %v", e.Result)
+		case *steam.LoggedOnEvent:
+			log.Println("LoggedOnEvent triggered")
+			client.Social.SetPersonaState(steamlang.EPersonaState_Online)
+		case steam.FatalErrorEvent:
+			log.Print(e)
+		default:
+			log.Print(e)
 		}
 	}
 	return nil
